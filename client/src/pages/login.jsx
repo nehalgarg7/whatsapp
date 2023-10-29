@@ -3,25 +3,65 @@ import { firebaseAuth } from "@/utils/FirebaseConfig";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
-import axios from 'axios';
+import axios from "axios";
+import { useStateProvider } from "@/context/StateContext";
+import { reducerCases } from "@/context/constants";
 function login() {
   const router = useRouter();
+
+  const [{userInfo, newUser}, dispatch] = useStateProvider();
+
+  useEffect(()=>{
+    if(userInfo?.id && !newUser) {
+      router.push("/");
+    }
+  },[userInfo, newUser])
+
   const handlelogin = async () => {
     const provider = new GoogleAuthProvider();
     const {
       user: { displayName: name, email, photoURL: profileImage },
     } = await signInWithPopup(firebaseAuth, provider);
     try {
-      if(email)
-      {
+      if (email) {
         const { data } = await axios.post(CHECK_USER_ROUTE, { email });
-        console.log({data});
+        // console.log({data});
+
         if (!data.status) {
+          dispatch({ type: reducerCases.SET_NEW_USER, newUser: true });
+          dispatch({
+            type: reducerCases.SET_USER_INFO,
+            userInfo: {
+              name,
+              email,
+              profileImage,
+              status: "",
+            },
+          });
           router.push("/onboarding");
+        } else {
+          const {
+            id,
+            name,
+            email,
+            profilePicture: profileImage,
+            status,
+          } = data;
+          dispatch({
+            type: reducerCases.SET_USER_INFO,
+            userInfo: {
+              id,
+              name,
+              email,
+              profileImage,
+              status,
+            },
+          });
+          router.push("/")
         }
-      }    
+      }
     } catch (error) {
       console.log(error);
     }
