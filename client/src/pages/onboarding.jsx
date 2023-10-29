@@ -53,7 +53,7 @@ function onboarding() {
           router.push("/");
         }
       } catch (error) {
-        console.log(error.response.data)
+        console.log(error)
       }
     }
   };
