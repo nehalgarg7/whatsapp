@@ -76,7 +76,7 @@ function login() {
           height={300}
           width={300}
         ></Image>
-        <span className="text-7xl">Whatsapp</span>
+        <span className="text-7xl">ChatConnect</span>
       </div>
       <button
         className="flex items-center justify-center gap-7 bg-search-input-container-background p-5 rounded-lg"

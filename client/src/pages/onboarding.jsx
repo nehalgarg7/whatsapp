@@ -76,7 +76,7 @@ function onboarding() {
           height={300}
           width={300}
         ></Image>
-        <span className="text-7xl">Whatsapp</span>
+        <span className="text-7xl">ChatConnect</span>
       </div>
       <h2 className="text=2xl">Create Your profile</h2>
       <div className="flex gap-6 mt-6">
