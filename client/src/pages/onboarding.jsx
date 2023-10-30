@@ -51,7 +51,7 @@ function onboarding() {
               status: about,
             },
           });
-          router.push("/");
+          //router.push("/");
         }
       } catch (error) {
         console.log(error)
