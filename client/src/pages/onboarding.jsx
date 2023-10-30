@@ -77,7 +77,7 @@ function onboarding() {
           height={300}
           width={300}
         ></Image>
-        <span className="text-7xl">Whats----Connect</span>
+        <span className="text-7xl">Whats--"hollla"Connect</span>
       </div>
       <h2 className="text=2xl">Create Your profile</h2>
       <div className="flex gap-6 mt-6">
