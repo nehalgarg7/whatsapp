@@ -11,9 +11,23 @@ datasource db {
 }
 
 model User {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  email String @unique
-  name    String?
-  profilePicture String @default("")
-  about String @default("")
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  email            String     @unique
+  name             String?
+  profilePicture   String     @default("")
+  about            String     @default("")
+  sentMessage      Messages[] @relation("sentMessages")
+  recievedMessages Messages[] @relation("recievedMessages")
+}
+
+model Messages {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  sender        User     @relation("sentMessages", fields: [senderId], references: [id])
+  senderId      String   @db.ObjectId
+  reciever      User     @relation("recievedMessages", fields: [recieverId], references: [id])
+  recieverId    String   @db.ObjectId
+  type          String   @default("text")
+  message       String
+  messageStatus String   @default("sent")
+  createdAt     DateTime @default(now())
 }
