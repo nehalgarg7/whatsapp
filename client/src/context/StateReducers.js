@@ -4,7 +4,10 @@ export const initialState = {
     userInfo: undefined,
     newUser: false,
     contactsPage: false,
-    currentChatUser: undefined
+    currentChatUser: undefined,
+    messages: [],
+    socket: undefined,
+    // newMessage : [],
 };
 
 const reducer = (state, action) => {
@@ -30,9 +33,39 @@ const reducer = (state, action) => {
             return {
                 currentChatUser: action.user,
             }
+
+        case reducerCases.SET_MESSAGES:
+            return {
+                ...state,
+                messages: action.messages,
+
+            }
+
+        case reducerCases.SET_SOCKET:
+            return {
+                ...state,
+                socket: action.socket,
+            }
+
+        case reducerCases.ADD_MESSAGE:
+            return {
+                ...state,
+                messages: [...state.messages, action.newMessage],
+            }
+
         default:
             return state;
     }
 }
 
+
+
 export default reducer;
+
+const arr = [
+    [ar1r[
+        a: 2,
+        b: 3,
+    ],],
+"HI",
+]

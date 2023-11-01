@@ -20,7 +20,7 @@ function ContactsList() {
         // } = await axios.get(GET_ALL_CONTACTS);
         let data = await axios.get(GET_ALL_CONTACTS);
 
-        console.log(data.data.user);
+        //console.log(data.data.user);
         setALLContacts(data.data.user);
       } catch (error) {
         console.log(error);
@@ -68,7 +68,7 @@ function ContactsList() {
             <div key={Date.now() + initialLetter}>
               <div className="text-teal-light pl-10 py-5">{initialLetter} </div>
 
-              {console.log(userList)}
+              {/* {console.log(userList)} */}
               {userList.map((contact) => {
                 return (
                   

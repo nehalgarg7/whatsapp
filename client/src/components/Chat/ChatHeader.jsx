@@ -13,7 +13,7 @@ function ChatHeader() {
   return (
     <div className="h-16 px-4 py-3 flex justify-between items-center bg-panel-header-background z-10">
       <div className="flex items-center justify-center gap-6">
-        {console.log(currentChatUser)}
+        {/* {console.log(currentChatUser)} */}
         <Avatar type="sm" image={currentChatUser?.data.profilePicture}></Avatar>
         <div className="flex flex-col">
           <span className="text-primary-strong">{currentChatUser?.data.name}</span>

@@ -6,28 +6,46 @@ import { FaMicrophone } from "react-icons/fa";
 import { ImAttachment } from "react-icons/im";
 import { MdSend } from "react-icons/md";
 import axios from "axios";
+import { reducerCases } from "@/context/constants";
 
 function MessageBar() {
 
-  const [{userInfo, currentChatUser},dispatch] = useStateProvider();
-  console.log(currentChatUser);
-  console.log(userInfo);
+  const [{userInfo, currentChatUser, socket},dispatch] = useStateProvider();
+  // console.log(currentChatUser);
+  // console.log(userInfo);
 
   const [message, setMessage] = useState("");
 
   const sendMessage = async() => {
-    alert("message sent");
-    setMessage("");
-    // try {
-    //   const {data} = await axios.post(ADD_MESSAGE_ROUTE,{
-    //     to: currentChatUser?.data.id,
-    //     from: userInfo?.id,
-    //     message,
-    //   })
-    //   setMessage("");
-    // } catch (error) {
-    //   console.log(error)
-    // }
+    alert("Hi")
+    try {
+      console.log("Enter");
+      const {data} = await axios.post(ADD_MESSAGE_ROUTE,{
+        to: currentChatUser?.data.id,
+        from: userInfo?.id,
+        message,
+      });
+
+      console.log(data.message)
+
+      // socket.current.emit("send-msg", {
+      //   to: currentChatUser?.data.id,
+      //   from: userInfo?.id,
+      //   message: data.message,
+      // });
+
+      dispatch({
+        type: reducerCases.ADD_MESSAGE,
+        newMessage: {
+          ...data.message,
+        },
+        fromSelf: true,
+      });
+      
+      setMessage("");
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
