@@ -31,23 +31,23 @@ function MessageBar() {
       console.log(userInfo?.id)
 
       //console.log(socket);
-      console.log(socket.current);
+      console.log(socket.current); //error here
       
       //Error occured here.
-      // socket.current.emit("send-msg", {
-      //   to: currentChatUser?.id,
-      //   from: userInfo?.id,
-      //   message: data.message,
-      // });
+      socket.current.emit("send-msg", {
+        to: currentChatUser?.id,
+        from: userInfo?.id,
+        message: data.message,
+      });
 
-      console.log("Hisndwnd0");
-      // dispatch({
-      //   type: reducerCases.ADD_MESSAGE,
-      //   newMessage: {
-      //     ...data.message,
-      //   },
-      //   fromSelf: true,
-      // });
+      console.log("Hisndwnd0"); //for error
+      dispatch({
+        type: reducerCases.ADD_MESSAGE,
+        newMessage: {
+          ...data.message,
+        },
+        fromSelf: true,
+      });
       
       setMessage("");
     } catch (error) {
@@ -73,7 +73,7 @@ function MessageBar() {
             type="text"
             placeholder="Type a message"
             className="bg-input-background text-sm focus:outline-none text-white h-10 rounded-lg px-5 py-4 w-full"
-            onChange={e=>setMessage(e.target.value)}
+            onChange={(e)=>setMessage(e.target.value)}
             value = {message}
           />
         </div>

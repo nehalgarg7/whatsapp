@@ -18,7 +18,9 @@ function Main() {
   const [{ userInfo, currentChatUser , messages}, dispatch] = useStateProvider();
   const [redirectLogin, setRedirectLogin] = useState(false);
   const [socketEvent, setSocketEvent] = useState(false);
+  
   const socket = useRef();
+
   useEffect(() => {
     if (redirectLogin) router.push("/login");
   }, [redirectLogin]);
@@ -65,7 +67,7 @@ function Main() {
   }, [userInfo]);
 
   console.log(socket)
-  console.log(socket.current)
+  console.log(socket.current) //console undefined
 
   useEffect(()=>{
     if(socket.current && !socketEvent)
@@ -76,9 +78,9 @@ function Main() {
           type:reducerCases.ADD_MESSAGE,
           newMessage: {
             ...data.message,
-          }
-        })
-      })
+          },
+        });
+      });
       setSocketEvent(true)
     }
     console.log("Socket-trrigger in main 1")
