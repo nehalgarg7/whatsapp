@@ -7,7 +7,7 @@ import MessageStatus from "../common/MessageStatus";
 function ChatContainer() {
   const [{ messages, currentChatUser, userInfo }] = useStateProvider();
   
-  console.log(messages)
+  console.log(messages, currentChatUser, userInfo)
   return (
     <div className="h-[80vh] w-full relative flex-grow overflow-auto custom-scrollbar">
       <div className="bg-chat-background bg-fixed h-full w-full opacity-5 fixed left-0 top-0 z-0"></div>
@@ -22,16 +22,19 @@ function ChatContainer() {
               <div
                 key={message.id}
                 className={`flex ${
-                  message.senderId === currentChatUser?.data.Id
+                  message.senderId === currentChatUser.id
                     ? "justify-start"
                     : "justify-end"
                 }`}
+                
+                
               >
+                {console.log(message.senderId, currentChatUser)}
                 {message.type === "text" && (
                   <>
                     <div
                       className={`text-white px-2 py-[5px] text-sm rounded-md flex gap-2 items-end max-w-[45%] ${
-                        message.senderId === currentChatUser?.data.Id
+                        message.senderId === currentChatUser.id
                           ? "bg-incoming-backgound"
                           : "bg-outgoing-background"
                       }`}

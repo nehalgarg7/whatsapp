@@ -68,7 +68,7 @@ function ContactsList() {
             <div key={Date.now() + initialLetter}>
               <div className="text-teal-light pl-10 py-5">{initialLetter} </div>
 
-              {/* {console.log(userList)} */}
+              {console.log(userList)}
               {userList.map((contact) => {
                 return (
                   

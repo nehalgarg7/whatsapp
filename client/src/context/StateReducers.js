@@ -31,6 +31,7 @@ const reducer = (state, action) => {
 
         case reducerCases.CHANGE_CURRENT_CHAT_USER:
             return {
+                ...state,
                 currentChatUser: action.user,
             }
 
@@ -62,10 +63,3 @@ const reducer = (state, action) => {
 
 export default reducer;
 
-const arr = [
-    [ar1r[
-        a: 2,
-        b: 3,
-    ],],
-"HI",
-]

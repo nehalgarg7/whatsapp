@@ -10,14 +10,20 @@ function ChatLIstItem({ data, isContactsPage = false }) {
   const handleContactClick = () => {
     // if(currentChatUser?.id === data?.id){
     //console.log("click");console.log(data);
+
+    console.log(currentChatUser);
+    console.log(data);
+    
     dispatch({
       type: reducerCases.CHANGE_CURRENT_CHAT_USER,
-      user: { data },
+      user: { ...data },
     });
 
     dispatch({ type: reducerCases.SET_ALL_CONTACTS_PAGE });
     // console.log(currentChatUser);
     // }
+
+    console.log(currentChatUser);
   };
 
   return (

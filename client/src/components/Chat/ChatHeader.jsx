@@ -14,9 +14,9 @@ function ChatHeader() {
     <div className="h-16 px-4 py-3 flex justify-between items-center bg-panel-header-background z-10">
       <div className="flex items-center justify-center gap-6">
         {/* {console.log(currentChatUser)} */}
-        <Avatar type="sm" image={currentChatUser?.data.profilePicture}></Avatar>
+        <Avatar type="sm" image={currentChatUser?.profilePicture}></Avatar>
         <div className="flex flex-col">
-          <span className="text-primary-strong">{currentChatUser?.data.name}</span>
+          <span className="text-primary-strong">{currentChatUser?.name}</span>
           <span className="text-secondary text-sm">online/offline</span>
         </div>
       </div>

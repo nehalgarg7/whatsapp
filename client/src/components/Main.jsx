@@ -15,7 +15,7 @@ import { HOST } from "@/utils/ApiRoutes";
 
 function Main() {
   const router = useRouter();
-  const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
+  const [{ userInfo, currentChatUser , messages}, dispatch] = useStateProvider();
   const [redirectLogin, setRedirectLogin] = useState(false);
   const [socketEvent, setSocketEvent] = useState(false);
   const socket = useRef();
@@ -30,7 +30,7 @@ function Main() {
         email: currentUser.email,
       });
 
-      if (!data.staus) {
+      if (!data.status) {
         router.push("/login");
       }
       if (data?.data) {
@@ -57,15 +57,20 @@ function Main() {
 
   useEffect(()=>{
     if(userInfo) {
+      console.log("Socket-trrigger in main 1")
       socket.current = io(HOST);
       socket.current.emit("add-user", userInfo.id);
       dispatch({type:reducerCases.SET_SOCKET, socket});
     }
   }, [userInfo]);
 
+  console.log(socket)
+  console.log(socket.current)
+
   useEffect(()=>{
     if(socket.current && !socketEvent)
     {
+      console.log("Socket-trrigger in main 1")
       socket.current.on("msg-recieve",(data)=>{
         dispatch({
           type:reducerCases.ADD_MESSAGE,
@@ -76,7 +81,7 @@ function Main() {
       })
       setSocketEvent(true)
     }
-
+    console.log("Socket-trrigger in main 1")
   },[socket.current]);
 
   useEffect(() => {
@@ -84,20 +89,21 @@ function Main() {
     const getMessages = async () => {
       let Userid = userInfo?.id;
       console.log(userInfo?.id);
-      console.log(currentChatUser.data.id);
+      console.log(currentChatUser.id);
       if (Userid) {
         const {
           data: { messages },
         } = await axios.get(
-          `${GET_MESSAGES_ROUTE}/${Userid}/${currentChatUser.data.id}`
+          `${GET_MESSAGES_ROUTE}/${userInfo.id}/${currentChatUser.id}`
         );
-        console.log({ data });
+        //console.log({ data });
         console.log({ messages });
         dispatch({type: reducerCases.SET_MESSAGES, messages});
+        console.log({ messages });
       }  
     };
 
-    if (currentChatUser?.data.id) {
+    if (currentChatUser?.id) {
       getMessages();
     }
   }, [currentChatUser]);

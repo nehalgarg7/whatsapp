@@ -21,26 +21,33 @@ function MessageBar() {
     try {
       console.log("Enter");
       const {data} = await axios.post(ADD_MESSAGE_ROUTE,{
-        to: currentChatUser?.data.id,
+        to: currentChatUser?.id,
         from: userInfo?.id,
         message,
       });
 
       console.log(data.message)
+      console.log(currentChatUser?.id)
+      console.log(userInfo?.id)
 
+      //console.log(socket);
+      console.log(socket.current);
+      
+      //Error occured here.
       // socket.current.emit("send-msg", {
-      //   to: currentChatUser?.data.id,
+      //   to: currentChatUser?.id,
       //   from: userInfo?.id,
       //   message: data.message,
       // });
 
-      dispatch({
-        type: reducerCases.ADD_MESSAGE,
-        newMessage: {
-          ...data.message,
-        },
-        fromSelf: true,
-      });
+      console.log("Hisndwnd0");
+      // dispatch({
+      //   type: reducerCases.ADD_MESSAGE,
+      //   newMessage: {
+      //     ...data.message,
+      //   },
+      //   fromSelf: true,
+      // });
       
       setMessage("");
     } catch (error) {
