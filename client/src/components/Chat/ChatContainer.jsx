@@ -3,6 +3,7 @@ import index from "@/pages";
 import { calculateTime } from "@/utils/CalculateTime";
 import React, { useEffect, useState } from "react";
 import MessageStatus from "../common/MessageStatus";
+import ImageMessage from "./ImageMessage";
 
 function ChatContainer() {
   const [{ messages, currentChatUser, userInfo }] = useStateProvider();
@@ -29,7 +30,7 @@ function ChatContainer() {
                 
                 
               >
-                {console.log(message.senderId, currentChatUser)}
+                {/* {console.log(message.senderId, currentChatUser)} */}
                 {message.type === "text" && (
                   <>
                     <div
@@ -49,12 +50,18 @@ function ChatContainer() {
                             <MessageStatus
                               messageStatus={message.messageStatus}
                             ></MessageStatus>
+                            
                           )}
                         </span>
                       </div>
                     </div>
                   </>
                 )}
+                {
+                  //display image msg
+                  message.type==="image" && <ImageMessage message={message}></ImageMessage>
+                }
+                {/* not real-time updating of message status */}
               </div>
             ))}
           </div>
