@@ -13,6 +13,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/uploads/images",express.static("uploads/images"));     
+
 app.use("/api/auth", AuthRoutes);
 app.use("/api/messages", MessageRoutes);
 
@@ -22,7 +24,7 @@ const server = app.listen(process.env.PORT, () => {
 
 const io = new Server(server, {
     cors : {
-        origin: 'http://localhost:3000', //chnage this during hosting
+        origin: 'http://localhost:3000', //change this during hosting
     },
 });
 
