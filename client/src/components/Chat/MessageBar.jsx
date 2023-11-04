@@ -9,7 +9,10 @@ import axios from "axios";
 import { reducerCases } from "@/context/constants";
 import EmojiPicker from "emoji-picker-react";
 import PhotoPicker from "../common/PhotoPicker";
-import CaptureAudio from "../common/CaptureAudio";
+import dynamic from "next/dynamic";
+const CaptureAudio = dynamic(()=>import("../common/CaptureAudio"),{
+  ssr: false,
+});
 
 function MessageBar() {
 
@@ -20,7 +23,7 @@ function MessageBar() {
   const [showEmojiPicker, setShowEmojiPicker]=useState(false);
   const emojiPickerRef= useRef(null);
   const [grabPhoto, setGrabPhoto] = useState(false);
-  const [showAudioRecorder,setshowAudioRecorder] = useState();
+  const [showAudioRecorder,setShowAudioRecorder] = useState(false);
 
   const photoPickerChange = async (e) => {
       // alert("working");
@@ -136,7 +139,9 @@ function MessageBar() {
 
   return (
     <div className="bg-panel-header-background h-20 px-4 flex items-center gap-6 relative">
-      <>
+      {
+        !showAudioRecorder && (
+        <>
         <div className="flex gap-6">
           <BsEmojiSmile
             className="text-panel-header-icon cursor-pointer text-xl"
@@ -174,13 +179,14 @@ function MessageBar() {
             <FaMicrophone
             className="text-panel-header-icon cursor-pointer text-xl"
             title="Record"
-            oncClick={()=> setshowAudioRecorder(true)}></FaMicrophone>
+            onClick={()=> setShowAudioRecorder(true)}></FaMicrophone>
           )}
           </button>
         </div>
       </>
+      )}
       {grabPhoto && <PhotoPicker onChange={photoPickerChange}></PhotoPicker>}
-      {showAudioRecorder && <CaptureAudio onChange={setshowAudioRecorder}></CaptureAudio>}
+      {showAudioRecorder && <CaptureAudio hide={setShowAudioRecorder}></CaptureAudio>}
     </div>
   );
 }
