@@ -9,6 +9,7 @@ import axios from "axios";
 import { reducerCases } from "@/context/constants";
 import EmojiPicker from "emoji-picker-react";
 import PhotoPicker from "../common/PhotoPicker";
+import CaptureAudio from "../common/CaptureAudio";
 
 function MessageBar() {
 
@@ -19,6 +20,7 @@ function MessageBar() {
   const [showEmojiPicker, setShowEmojiPicker]=useState(false);
   const emojiPickerRef= useRef(null);
   const [grabPhoto, setGrabPhoto] = useState(false);
+  const [showAudioRecorder,setshowAudioRecorder] = useState();
 
   const photoPickerChange = async (e) => {
       // alert("working");
@@ -163,15 +165,22 @@ function MessageBar() {
         </div>
         <div className="flex w-10 items-center justify-center">
           <button>
+            {
+            message.length? (
             <MdSend className="text-panel-header-icon cursor-pointer text-xl" title="Send message"
             onClick={sendMessage}
             ></MdSend>
-            {/* <FaMicrophone className="text-panel-header-icon cursor-pointer text-xl" title="Record"></FaMicrophone> */}
+            ) : (
+            <FaMicrophone
+            className="text-panel-header-icon cursor-pointer text-xl"
+            title="Record"
+            oncClick={()=> setshowAudioRecorder(true)}></FaMicrophone>
+          )}
           </button>
         </div>
       </>
       {grabPhoto && <PhotoPicker onChange={photoPickerChange}></PhotoPicker>}
-
+      {showAudioRecorder && <CaptureAudio onChange={setshowAudioRecorder}></CaptureAudio>}
     </div>
   );
 }
