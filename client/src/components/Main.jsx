@@ -12,10 +12,11 @@ import { reducerCases } from "@/context/constants";
 import Chat from "./Chat/Chat";
 import { io } from "socket.io-client";
 import { HOST } from "@/utils/ApiRoutes";
+import SearchMessages from "./Chat/SearchMessages";
 
 function Main() {
   const router = useRouter();
-  const [{ userInfo, currentChatUser , messages}, dispatch] = useStateProvider();
+  const [{ userInfo, currentChatUser , messages, messagesSearch}, dispatch] = useStateProvider();
   const [redirectLogin, setRedirectLogin] = useState(false);
   const [socketEvent, setSocketEvent] = useState(false);
   
@@ -114,7 +115,13 @@ function Main() {
     <>
       <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden">
         <ChatList></ChatList>
-        {currentChatUser ? <Chat></Chat> : <Empty></Empty>}
+        {currentChatUser ? 
+        <div className={messagesSearch ? "grid grid-cols-2" : "grid-cols-2"}>
+          <Chat></Chat> 
+          {/* {console.log(messagesSearch)} */}
+         {messagesSearch && <SearchMessages></SearchMessages>} 
+        </div>
+        : <Empty></Empty>}
       </div>
     </>
   );
