@@ -1,12 +1,16 @@
 import { useStateProvider } from "@/context/StateContext";
+import { reducerCases } from "@/context/constants";
+import { ADD_AUDIO_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
+import axios from "axios";
 import { handleClientScriptLoad } from "next/script";
 import React, { useEffect, useRef, useState } from "react";
 import { FaMicrophone, FaPause, FaPauseCircle, FaPlay, FaStop, FaTrash } from "react-icons/fa";
 import { MdSend } from "react-icons/md";
+// import { Socket } from "socket.io-client";
 import WaveSurfer from "wavesurfer.js";
 
 function CaptureAudio({ hide }) {
-  const [{ userInfo, currentChatUser, socket }, dispatch] = useStateProvider()
+  const [{ userInfo, currentChatUser, socket }, dispatch] = useStateProvider();
 
   const [isRecording, setIsRecording] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState(null);
@@ -47,11 +51,11 @@ function CaptureAudio({ hide }) {
       height: 30,
       responsive: true,
     });
-    setWaveform(wavesurfer)
+    setWaveform(wavesurfer);
 
     wavesurfer.on("finish", () => {
-      setIsPlaying(false)
-    })
+      setIsPlaying(false);
+    });
 
     return () => {
       wavesurfer.destroy();
@@ -67,6 +71,7 @@ function CaptureAudio({ hide }) {
       setCurrentPlaybackTime(0);
       setTotalDuration(0);
       setIsRecording(true);
+      setRecordedAudio(null); 
       navigator.mediaDevices.getUserMedia({audio:true}).then((stream)=>{
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecordedRed.current = mediaRecorder;
@@ -96,6 +101,10 @@ function CaptureAudio({ hide }) {
       waveform.stop();
 
       const audioChunks = [];
+      mediaRecordedRed.current.addEventListener("dataavailable", (event)=>{
+        audioChunks.push(event.data);
+      });
+
       mediaRecordedRed.current.addEventListener("stop",()=>{
         const audioBlob = new Blob(audioChunks,{type:"audio/mp3"});
         const audioFile = new File([audioBlob],"recording.mp3");
@@ -133,7 +142,39 @@ function CaptureAudio({ hide }) {
   };
 
   const sendRecording = async () => {
-
+    // alert("audio");
+    console.log("audio send");
+      try {
+        const formData =new FormData();
+        formData.append("audio",renderedAudio);
+        const response = await axios.post(ADD_AUDIO_MESSAGE_ROUTE,formData,{
+          headers:{
+            "Content-Type" : "multipart/form-data",
+          },
+          params:{
+            from :userInfo.id,
+            to: currentChatUser.id,
+          }
+        });
+        if(response.status===201){
+          socket.current.emit("send-msg", {
+            to: currentChatUser?.id,
+            from: userInfo?.id,
+            message: response.data.message,
+          });
+    
+          // console.log("Hisndwnd0"); //for error
+          dispatch({
+            type: reducerCases.ADD_MESSAGE,
+            newMessage: {
+              ...response.data.message,
+            },
+            fromSelf: true,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
   };
 
   const formatTime = (time) => {
