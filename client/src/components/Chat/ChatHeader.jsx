@@ -7,6 +7,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 
+
 function ChatHeader() {
 
   const [{currentChatUser},dispatch] = useStateProvider(); 

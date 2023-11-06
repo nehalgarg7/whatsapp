@@ -120,6 +120,7 @@ function Main() {
           <Chat></Chat> 
           {/* {console.log(messagesSearch)} */}
          {messagesSearch && <SearchMessages></SearchMessages>} 
+         {/* {console.log(userInfo)} */}
         </div>
         : <Empty></Empty>}
       </div>

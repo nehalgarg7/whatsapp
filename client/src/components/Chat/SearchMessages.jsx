@@ -10,6 +10,8 @@ function SearchMessages() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedMessages,setSearchedMessages]=useState([])
 
+
+  
   useEffect(()=>{
     if(searchTerm){
       setSearchedMessages(messages.filter(message=>message.type==="text" && 
