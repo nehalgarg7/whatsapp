@@ -62,6 +62,7 @@ function Main() {
     if(userInfo) {
       console.log("Socket-trrigger in main 1")
       socket.current = io(HOST);
+      console.log(socket);
       socket.current.emit("add-user", userInfo.id);
       dispatch({type:reducerCases.SET_SOCKET, socket});
     }
