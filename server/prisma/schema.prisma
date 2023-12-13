@@ -1,4 +1,5 @@
-// Docs: https://pris.ly/d/prisma-schema
+// Docs: https://pris.ly/d/prisma-schema 
+// GeneralQueryDocs : https://www.prisma.io/docs/orm/prisma-client
 
 generator client {
   provider = "prisma-client-js"
