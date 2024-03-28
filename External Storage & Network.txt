@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 server/index
 server/next.config
 uploads/images-images: messageController,messageRoutes,ApiRoutes, captureImage
@@ -10,4 +11,18 @@ messageBar : ssr:false
 appearance:
 client/chatHeader
 client/chatcontainer
+=======
+server/index
+server/next.config
+uploads/images-images: messageController,messageRoutes,ApiRoutes, captureImage
+uploads/recordings/ : captureAudio
+
+messageBar : ssr:false
+
+
+*****************************************************************
+appearance:
+client/chatHeader
+client/chatcontainer
+>>>>>>> 699d7b7a1cd708668854b867deebb0c51ac897f0
 client/messageBar
