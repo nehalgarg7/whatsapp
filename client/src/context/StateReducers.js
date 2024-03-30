@@ -58,6 +58,11 @@ const reducer = (state, action) => {
                 ...state,
                 messagesSearch : !state.messagesSearch,
             }   
+        case reducerCases.SET_EXIT_CHAT:
+            return {
+                ...state,
+                currentChatUser: undefined, 
+            }
 
         default:
             return state;
