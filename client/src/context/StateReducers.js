@@ -8,6 +8,7 @@ export const initialState = {
     messages: [],
     socket: undefined,
     messagesSearch : false,
+    onlineUsers:[],
 };
 
 const reducer = (state, action) => {
@@ -63,13 +64,15 @@ const reducer = (state, action) => {
                 ...state,
                 currentChatUser: undefined, 
             }
-
+        case reducerCases.SET_ONLINE_USERS:
+            return {
+               ...state,
+               onlineUsers: action.onlineUsers,
+            }
         default:
             return state;
     }
 }
-
-
 
 export default reducer;
 

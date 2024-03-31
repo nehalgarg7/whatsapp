@@ -74,6 +74,7 @@ function Main() {
     if(socket.current && !socketEvent)
     {
       console.log("Socket-trrigger in main 1")
+
       socket.current.on("msg-recieve",(data)=>{
         dispatch({
           type:reducerCases.ADD_MESSAGE,
@@ -82,6 +83,14 @@ function Main() {
           },
         });
       });
+
+      socket.current.on("online-users",({onlineUsers})=>{
+        dispatch({
+          type: reducerCases.SET_ONLINE_USERS,
+          onlineUsers,
+        });
+      });
+
       setSocketEvent(true)
     }
     console.log("Socket-trrigger in main 1")
