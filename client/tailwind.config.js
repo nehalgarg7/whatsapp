@@ -23,7 +23,7 @@ module.exports = {
         "conversation-panel-background": "#0b141a",
         "background-default-hover": "#202c33",
         "incoming-background": "#202c33",
-        "outgoing-background": "#005c4b",
+        "outgoing-background": "#608793", 
         "bubble-meta": "hsla(0,0%,100%,0.6)",
         "icon-ack": "#53bdeb",
       },

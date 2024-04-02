@@ -36,9 +36,18 @@ io.on("connection",(socket) =>{
     //console.log(global.chatSocket);
     socket.on("add-user", (userId) => {
         onlineUsers.set(userId, socket.id);
+        socket.broadcast.emit("online-users",{
+            onlineUsers: Array.from(onlineUsers.keys()),
+        });
     });
 
-    
+    socket.on("signout", (id)=>{
+        onlineUsers.delete(id);
+        socket.broadcast.emit("online-users",{
+            onlineUsers: Array.from(onlineUsers.keys()),
+        });
+    });  
+
     socket.on("send-msg",(data) => {
         //console.log(data);
         const sendUserSocket = onlineUsers.get(data.to);
