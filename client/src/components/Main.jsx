@@ -16,7 +16,7 @@ import SearchMessages from "./Chat/SearchMessages";
 
 function Main() {
   const router = useRouter();
-  const [{ userInfo, currentChatUser , messages, messagesSearch}, dispatch] = useStateProvider();
+  const [{ userInfo, currentChatUser , messages, messagesSearch, userContacts}, dispatch] = useStateProvider();
   const [redirectLogin, setRedirectLogin] = useState(false);
   const [socketEvent, setSocketEvent] = useState(false);
   
@@ -58,24 +58,18 @@ function Main() {
     }
   });
 
-  useEffect(()=>{
-    if(userInfo) {
-      console.log("Socket-trrigger in main 1")
+
+  useEffect(() => {
+    if (userInfo) {
       socket.current = io(HOST);
-      console.log(socket);
       socket.current.emit("add-user", userInfo.id);
-      dispatch({type:reducerCases.SET_SOCKET, socket});
+      dispatch({ type: reducerCases.SET_SOCKET, socket });
     }
   }, [userInfo]);
-
-  console.log(socket)
-  console.log(socket.current) //console undefined
 
   useEffect(()=>{
     if(socket.current && !socketEvent)
     {
-      console.log("Socket-trrigger in main 1")
-
       socket.current.on("msg-recieve",(data)=>{
         dispatch({
           type:reducerCases.ADD_MESSAGE,
@@ -92,33 +86,43 @@ function Main() {
         });
       });
 
+      socket.current.on("mark-read-recieve", ({ id, recieverId }) => {
+        dispatch({
+          type: reducerCases.SET_MESSAGES_READ,
+          id,
+          recieverId,
+        });
+      });
+
       setSocketEvent(true)
     }
-    console.log("Socket-trrigger in main 1")
+
   },[socket.current]);
 
   useEffect(() => {
-    console.log("Hi");
     const getMessages = async () => {
       let Userid = userInfo?.id;
-      console.log(userInfo?.id);
-      console.log(currentChatUser.id);
       if (Userid) {
         const {
           data: { messages },
         } = await axios.get(
           `${GET_MESSAGES_ROUTE}/${userInfo.id}/${currentChatUser.id}`
         );
-        //console.log({ data });
-        console.log({ messages });
         dispatch({type: reducerCases.SET_MESSAGES, messages});
-        console.log({ messages });
       }  
     };
 
-    if (currentChatUser?.id) {
+    if (
+      currentChatUser &&
+      userContacts.findIndex((contact) => contact.id === currentChatUser.id) !==
+        -1
+    ) {
       getMessages();
     }
+
+    // if (currentChatUser?.id) {
+    //   getMessages();
+    // }
   }, [currentChatUser]);
 
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useStateProvider } from "@/context/StateContext";
 import Input from "@/components/common/Input";
@@ -17,7 +17,6 @@ function onboarding() {
   const [image, setImage] = useState("/default_avatar.png");
 
   useEffect(()=>{
-    console.log("NewUser-UseEffect-Called");
     if(!newUser && !userInfo?.email) {
       router.push("/login");
     }
@@ -27,11 +26,11 @@ function onboarding() {
   },[newUser, userInfo, router]);
 
   const onboardUserHandler = async() => {
-    console.log("click1");
+   
     if(validateDetails())
-    {
-      const email = userInfo.email;
-      try {
+    {  
+      const email = userInfo.email; 
+      try {      
         const {data} = await axios.post(ONBOARD_USER_ROUTE, {
           email,
           name,
@@ -51,7 +50,6 @@ function onboarding() {
               status: about,
             },
           });
-          //router.push("/");
         }
       } catch (error) {
         console.log(error)
@@ -60,7 +58,7 @@ function onboarding() {
   };
 
   const validateDetails = () => {
-    console.log("Validate Calls");
+    
     if(name.length < 3)
     {
       return false;
@@ -97,5 +95,4 @@ function onboarding() {
     </div>
   );
 }
-
 export default onboarding;

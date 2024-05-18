@@ -21,9 +21,19 @@ function ContextMenu({ options, coordinates, contextMenu, setContextMenu }) {
     };
   }, []);
 
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === "Escape") {
+        if (contextMenu) setContextMenu(false);
+      }
+    };
+    window.addEventListener("keyup", handleKeyPress);
+    return () => window.removeEventListener("keyup", handleKeyPress);
+  }, []);
+
   const handleClick = (e, callback) => {
     e.stopPropagation();
-    setContextMenu(false);
+    //setContextMenu(false);
     callback();
   };
   return (
@@ -42,7 +52,6 @@ function ContextMenu({ options, coordinates, contextMenu, setContextMenu }) {
             onClick={(e) => handleClick(e, callback)}
             className="px-5 py-2 cursor-pointer hover:bg-background-default-hover"
           >
-            {" "}
             <span className="text-white">{name}</span>
           </li>
         ))}

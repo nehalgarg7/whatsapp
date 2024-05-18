@@ -21,6 +21,7 @@ export const checkUser = async (req, res, next) => {
 
 export const onBoardUser = async (req, res, next) => {
     try {
+        console.log(req.body);
         const { email, name, about, image: profilePicture } = req.body;
         if (!email || !name || !profilePicture) {
             return res.send("Email, Name and Image are required.");

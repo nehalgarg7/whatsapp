@@ -6,11 +6,26 @@ import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "../common/MessageStatus";
 
 function ImageMessage({ message }) {
+  //console.log(message);
+  // if message.message[0] === 'h' &&& message.message[1] === 't', then URL = message.message otherwise URL = ${HOST}/${message.message}
+
+  let URL = "";
+
+  if (message.message[0] === 'h' && message.message[1] === 't') 
+    {
+      URL = message.message;
+    }
+  else
+  {
+    URL = `${HOST}/${message.message}`;
+  }
+
+
   const [{ currentChatUser, userInfo }] = useStateProvider();
   return ( 
   <div className={`p-1 rounded-lg ${message.senderId === currentChatUser.id ? "bg-incoming-background" : "bg-outgoing-background"}`}>
     <div className="relative">
-      <Image src={`${HOST}/${message.message}`}
+      <Image src={`${URL}`}
         className="rounded-lg"
         alt="asset"
         height={300}
@@ -24,7 +39,7 @@ function ImageMessage({ message }) {
         { message.senderId === userInfo.id && (
           <MessageStatus messageStatus={message.messageStatus}></MessageStatus>
         )}
-        {console.log(message.messageStatus)}
+        {/* {console.log(message.messageStatus)} */}
         </span>
       </div>
     </div>

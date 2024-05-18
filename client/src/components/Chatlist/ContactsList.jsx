@@ -35,13 +35,8 @@ function ContactsList() {
     
     const getContacts = async () => {
       try {
-        
-        // const {
-        //   data: { users },
-        // } = await axios.get(GET_ALL_CONTACTS);
         let data = await axios.get(GET_ALL_CONTACTS);
-
-        //console.log(data.data.user);
+        
         setALLContacts(data.data.user);
         setSearchContacts(data.data.user)
       } catch (error) {
@@ -91,8 +86,6 @@ function ContactsList() {
           return (  userList.length >0 && (
             <div key={Date.now() + initialLetter}>
               <div className="text-teal-light pl-10 py-5">{initialLetter} </div>
-
-              {console.log(userList)}
               {userList.map((contact) => {
                 return (
                   
@@ -108,10 +101,6 @@ function ContactsList() {
             </div> )
           );
         })}
-
-        {/* {
-          console.log(allContacts)
-        } */}
       </div>
     </div>
   );

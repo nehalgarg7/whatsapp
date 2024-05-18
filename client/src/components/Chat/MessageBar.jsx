@@ -41,6 +41,8 @@ function MessageBar() {
             to: currentChatUser.id,
           }
         });
+
+        //console.log(response);
         if(response.status===201){
           socket.current.emit("send-msg", {
             to: currentChatUser?.id,
@@ -58,7 +60,7 @@ function MessageBar() {
           });
         }
       } catch (error) {
-        console.log(error);
+        console.log("Error adding image message:",error);
       }
   }
 
@@ -101,7 +103,7 @@ function MessageBar() {
   const sendMessage = async() => {
     // alert("Hi")
     try {
-      console.log("Enter");
+      //console.log("Enter");
       const {data} = await axios.post(ADD_MESSAGE_ROUTE,{
         to: currentChatUser?.id,
         from: userInfo?.id,
@@ -109,11 +111,11 @@ function MessageBar() {
       });
 
       // console.log(data.message)
-      console.log(currentChatUser?.id)
-      console.log(userInfo?.id)
+      //console.log(currentChatUser?.id)
+      //console.log(userInfo?.id)
 
       //console.log(socket);
-      console.log(socket.current); //error here
+      //console.log(socket.current); //error here
       
       //Error occured here.
       socket.current.emit("send-msg", {
@@ -122,7 +124,7 @@ function MessageBar() {
         message: data.message,
       });
 
-      console.log("Hisndwnd0"); //for error
+      //console.log("Hisndwnd0"); //for error
       dispatch({
         type: reducerCases.ADD_MESSAGE,
         newMessage: {

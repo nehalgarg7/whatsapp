@@ -10,7 +10,7 @@ export default function ChatLIstItem({ data, isContactPage = false }) {
   const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
 
   const handleContactClick = () => {
-    console.log("function", currentChatUser, data, userInfo);
+    //console.log("function", currentChatUser, data, userInfo);
     if (currentChatUser?.id === data?.id) {
       return dispatch({ type: reducerCases.SET_ALL_CONTACTS_PAGE });
     }

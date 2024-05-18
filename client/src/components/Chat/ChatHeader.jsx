@@ -29,7 +29,7 @@ function ChatHeader() {
     {
       name:"Exit",
       callback: async()=>{
-        // setIsContextMenuVisible(false);
+        setIsContextMenuVisible(false);
         dispatch({type: reducerCases.SET_EXIT_CHAT });
       },
     },

@@ -2,9 +2,8 @@ import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import { ADD_AUDIO_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 import axios from "axios";
-import { handleClientScriptLoad } from "next/script";
 import React, { useEffect, useRef, useState } from "react";
-import { FaMicrophone, FaPause, FaPauseCircle, FaPlay, FaStop, FaTrash } from "react-icons/fa";
+import { FaMicrophone, FaPauseCircle, FaPlay, FaStop, FaTrash } from "react-icons/fa";
 import { MdSend } from "react-icons/md";
 // import { Socket } from "socket.io-client";
 import WaveSurfer from "wavesurfer.js";
@@ -18,7 +17,7 @@ function CaptureAudio({ hide }) {
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [currentPlaybackTime, setCurrentPlaybackTime] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
-  const [isPlaying, setIsPlaying] = useState();
+  const [isPlaying, setIsPlaying] = useState(false);
   const [renderedAudio,setRenderedAudio]=useState(null);
 
   const audioRef = useRef(null)
@@ -71,7 +70,7 @@ function CaptureAudio({ hide }) {
       setCurrentPlaybackTime(0);
       setTotalDuration(0);
       setIsRecording(true);
-      setRecordedAudio(null); 
+      //setRecordedAudio(null); 
       navigator.mediaDevices.getUserMedia({audio:true}).then((stream)=>{
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecordedRed.current = mediaRecorder;
@@ -143,7 +142,7 @@ function CaptureAudio({ hide }) {
 
   const sendRecording = async () => {
     // alert("audio");
-    console.log("audio send");
+    // console.log("audio send");
       try {
         const formData =new FormData();
         formData.append("audio",renderedAudio);
@@ -162,8 +161,6 @@ function CaptureAudio({ hide }) {
             from: userInfo?.id,
             message: response.data.message,
           });
-    
-          // console.log("Hisndwnd0"); //for error
           dispatch({
             type: reducerCases.ADD_MESSAGE,
             newMessage: {
@@ -171,6 +168,7 @@ function CaptureAudio({ hide }) {
             },
             fromSelf: true,
           });
+          hide();
         }
       } catch (error) {
         console.log(error);
@@ -198,14 +196,13 @@ function CaptureAudio({ hide }) {
             Recording <span>{recordingDuration} s</span>
           </div>
         ) : (
-          <div>
+          <div className=" ">
             {
               recordedAudio && (
                 <>{
                   !isPlaying ? (
                     <FaPlay onClick={handlePlayRecording}> </FaPlay>
                   ) : (
-                    // <FaPlay onClick={handleStopRecording}></FaPlay>
                     <FaStop onClick={handlePauseRecording}></FaStop>
                   )}
                 </>

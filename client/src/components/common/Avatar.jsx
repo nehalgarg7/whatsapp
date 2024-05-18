@@ -20,6 +20,20 @@ function Avatar({ type, image, setImage }) {
   const [showPhotoLibrary, setShowPhotoLibrary] = useState(false);
 
   const [showCapturePhoto, setShowCapturePhoto] = useState(false);
+  const [isFirstRun, setIsFirstRun] = useState(true);
+  
+  useEffect(() => {
+    const handleClick = () => {
+      if (!isFirstRun) {
+        setIsContextMenuVisible(false);
+        setIsFirstRun(true);
+      } else setIsFirstRun(false);
+    };
+    if (isContextMenuVisible) {
+      window.addEventListener("click", handleClick);
+    }
+    return () => window.removeEventListener("click", handleClick);
+  }, [isContextMenuVisible, isFirstRun]);
 
   const showContextMenu = (e) => {
     e.preventDefault();

@@ -11,6 +11,7 @@ export const initialState = {
     onlineUsers: [],
     userContacts: [],
     filteredContacts: [],
+    contactSearch: "",
 };
 
 const reducer = (state, action) => {
@@ -32,11 +33,41 @@ const reducer = (state, action) => {
                 contactsPage: !state.contactsPage,
             }
 
-        case reducerCases.CHANGE_CURRENT_CHAT_USER:
-            return {
-                ...state,
-                currentChatUser: action.user,
+        // case reducerCases.CHANGE_CURRENT_CHAT_USER:
+        //     return {
+        //         ...state,
+        //         currentChatUser: action.user,
+        //     }
+
+        case reducerCases.CHANGE_CURRENT_CHAT_USER: {
+            if (action.user) {
+                console.log("here");
+                if (state.contactsPage) {
+                    console.log("in if", action.user);
+                    return {
+                        ...state,
+                        currentChatUser: action.user,
+                        messages: [],
+                    };
+                }
+                state.socket.current.emit("mark-read", {
+                    id: action.user.id,
+                    recieverId: state.userInfo.id,
+                });
+                const clonedContacts = [...state.userContacts];
+                const index = clonedContacts.findIndex(
+                    (contact) => contact.id === action.user.id
+                );
+                clonedContacts[index].totalUnreadMessages = 0;
+                return {
+                    ...state,
+                    currentChatUser: action.user,
+                    messageSearch: false,
+                    messages: [],
+                    userContacts: clonedContacts,
+                };
             }
+        }
 
         case reducerCases.SET_MESSAGES:
             return {
@@ -45,17 +76,168 @@ const reducer = (state, action) => {
 
             }
 
+        case reducerCases.SET_MESSAGES_READ: {
+            if (state.userInfo.id === action.id) {
+                const clonedMessages = [...state.messages];
+                const clonedContacts = [...state.userContacts];
+                clonedMessages.forEach(
+                    (msg, index) => (clonedMessages[index].messageStatus = "read")
+                );
+                const index = clonedContacts.findIndex(
+                    (contact) => contact.id === action.recieverId
+                );
+                if (index !== -1) {
+                    clonedContacts[index].messageStatus = "read";
+                }
+                return {
+                    ...state,
+                    messages: clonedMessages,
+                    userContacts: clonedContacts,
+                };
+            } else {
+                return {
+                    ...state,
+                };
+            }
+        }
+
         case reducerCases.SET_SOCKET:
             return {
                 ...state,
                 socket: action.socket,
             }
 
-        case reducerCases.ADD_MESSAGE:
-            return {
-                ...state,
-                messages: [...state.messages, action.newMessage],
+        // case reducerCases.ADD_MESSAGE:
+        //     return {
+        //         ...state,
+        //         messages: [...state.messages, action.newMessage],
+        //     }
+
+        case reducerCases.ADD_MESSAGE: {
+            if (
+                state.currentChatUser?.id === action.newMessage.senderId ||
+                action?.fromSelf
+            ) {
+                state.socket.current.emit("mark-read", {
+                    id: action.newMessage.senderId,
+                    recieverId: action.newMessage.recieverId,
+                });
+
+                const clonedContacts = [...state.userContacts];
+                if (action.newMessage.recieverId === state.userInfo.id) {
+                    const index = clonedContacts.findIndex(
+                        (contact) => contact.id === action.newMessage.senderId
+                    );
+                    if (index !== -1) {
+                        const data = clonedContacts[index];
+                        data.message = action.newMessage.message;
+                        data.type = action.newMessage.type;
+                        data.messageId = action.newMessage.id;
+                        data.messageStatus = action.newMessage.messageStatus;
+                        data.recieverId = action.newMessage.recieverId;
+                        data.senderId = action.newMessage.senderId;
+                        clonedContacts.splice(index, 1);
+                        clonedContacts.unshift(data);
+                    }
+                    return {
+                        ...state,
+                        messages: [...state.messages, action?.newMessage],
+                        userContacts: clonedContacts,
+                    };
+                } else {
+                    const index = clonedContacts.findIndex(
+                        (contact) => contact?.id === action?.newMessage?.recieverId
+                    );
+                    if (index !== -1) {
+                        const data = clonedContacts[index];
+                        data.message = action?.newMessage?.message;
+                        data.type = action?.newMessage?.type;
+                        data.messageId = action?.newMessage?.id;
+                        data.messageStatus = action?.newMessage?.messageStatus;
+                        data.recieverId = action?.newMessage?.recieverId;
+                        data.senderId = action?.newMessage?.senderId;
+                        clonedContacts.splice(index, 1);
+                        clonedContacts.unshift(data);
+                    } else {
+                        const {
+                            message,
+                            type,
+                            id,
+                            messageStatus,
+                            recieverId,
+                            senderId,
+                            createdAt,
+                        } = action.newMessage;
+                        const data = {
+                            message,
+                            type,
+                            messageId: id,
+                            messageStatus,
+                            recieverId,
+                            senderId,
+                            createdAt,
+                            id: action?.newMessage?.reciever?.id,
+                            name: action?.newMessage?.reciever?.name,
+                            profilePicture: action?.newMessage?.reciever?.profilePicture,
+                            totalUnreadMessages: action?.fromSelf ? 0 : 1,
+                        };
+                        clonedContacts.unshift(data);
+                    }
+                    return {
+                        ...state,
+                        messages: [...state.messages, action.newMessage],
+                        userContacts: clonedContacts,
+                    };
+                }
+            } else {
+                const clonedContacts = [...state.userContacts];
+                const index = clonedContacts.findIndex(
+                    (contact) => contact?.id === action?.newMessage?.senderId
+                );
+                if (index !== -1) {
+                    const data = clonedContacts[index];
+                    data.message = action?.newMessage?.message;
+                    data.type = action?.newMessage?.type;
+                    data.messageId = action?.newMessage?.id;
+                    data.messageStatus = action?.newMessage?.messageStatus;
+                    data.recieverId = action?.newMessage?.recieverId;
+                    data.senderId = action?.newMessage?.senderId;
+                    data.totalUnreadMessages += 1;
+                    clonedContacts.splice(index, 1);
+                    clonedContacts.unshift(data);
+                } else {
+                    const {
+                        message,
+                        type,
+                        id,
+                        messageStatus,
+                        recieverId,
+                        senderId,
+                        createdAt,
+                    } = action.newMessage;
+                    const data = {
+                        message,
+                        type,
+                        messageId: id,
+                        messageStatus,
+                        recieverId,
+                        senderId,
+                        createdAt,
+                        id: action?.newMessage?.sender?.id,
+                        name: action?.newMessage?.sender?.name,
+                        profilePicture: action.newMessage.sender.profilePicture,
+                        totalUnreadMessages: action.fromSelf ? 0 : 1,
+                    };
+                    clonedContacts.unshift(data);
+                }
+
+                return {
+                    ...state,
+                    userContacts: clonedContacts,
+                };
             }
+        }
+
         case reducerCases.SET_MESSAGE_SEARCH:
             return {
                 ...state,
@@ -80,7 +262,8 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 currentChatUser: undefined,
-            }
+                messages: [],
+            };
         case reducerCases.SET_ONLINE_USERS:
             return {
                 ...state,

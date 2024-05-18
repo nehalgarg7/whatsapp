@@ -2,7 +2,6 @@ import express  from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import AuthRoutes from "./routes/AuthRoutes.js"
-//mport router from "./routes/AuthRoutes.js";
 import MessageRoutes from "./routes/MessageRoutes.js"
 import { Server } from "socket.io";
 
@@ -25,15 +24,14 @@ const server = app.listen(process.env.PORT, () => {
 
 const io = new Server(server, {
     cors : {
-        origin: 'http://localhost:3000', //change this during hosting
+        origin: 'http://localhost:3000',
+         //change this during hosting
     },
 });
 
 global.onlineUsers = new Map();
 io.on("connection",(socket) =>{
-    
     global.chatSocket = socket;
-    //console.log(global.chatSocket);
     socket.on("add-user", (userId) => {
         onlineUsers.set(userId, socket.id);
         socket.broadcast.emit("online-users",{
@@ -52,10 +50,19 @@ io.on("connection",(socket) =>{
         //console.log(data);
         const sendUserSocket = onlineUsers.get(data.to);
         if(sendUserSocket) {
-            socket.to(sendUserSocket).emit("msg-recieve", {
+            socket
+            .to(sendUserSocket)
+            .emit("msg-recieve", {
                 from: data.from,
                 message: data.message,
             })
         }
     })
+
+    socket.on("mark-read", ({ id, recieverId }) => {
+        const sendUserSocket = onlineUsers.get(id);
+        if (sendUserSocket) {
+          socket.to(sendUserSocket).emit("mark-read-recieve", { id, recieverId });
+        }
+      });
 })

@@ -19,7 +19,7 @@ function VoiceMessage({ message }) {
   const waveform = useRef(null);
 
   useEffect(() => {
-    { console.log("waveformref form", waveFormRef.current) }
+    // { console.log("waveformref form", waveFormRef.current) }
     if (waveform.current === null || waveform.current.isDestroyed) {
       waveform.current = WaveSurfer.create({
         container: waveFormRef.current,
@@ -42,10 +42,10 @@ function VoiceMessage({ message }) {
 
   useEffect(() => {
     const audioURL = `${HOST}/${message.message}`;
-    console.log(audioURL, message.message)
+    //console.log(audioURL, message.message)
     const audio = new Audio(audioURL);
     setAudioMessage(audio);
-    console.log("waveform.current:", waveform.current);
+    //console.log("waveform.current:", waveform.current);
     waveform.current.load(audioURL);
     waveform.current.on("ready", () => {
       setTotalDuration(waveform.current.getDuration());
