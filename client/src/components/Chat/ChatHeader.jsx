@@ -7,12 +7,12 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import ContextMenu from "../common/ContextMenu";
-
+import {handleFile} from "@/utils/FileLogic";
 
 function ChatHeader() {
 
-  const [{currentChatUser, onlineUsers},dispatch] = useStateProvider(); 
-
+  const [{currentChatUser, userInfo, onlineUsers, messages},dispatch] = useStateProvider();
+ 
   const [contextMenuCordinates,setContextMenuCordinates]= useState({
     x:0,
     y:0,
@@ -25,6 +25,16 @@ function ChatHeader() {
     setIsContextMenuVisible(true);
   };
 
+
+  const fileDownload = function (filename, text) {
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = window.URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(a.href);
+  }
+
   const contextMenuOptions = [
     {
       name:"Exit",
@@ -33,8 +43,18 @@ function ChatHeader() {
         dispatch({type: reducerCases.SET_EXIT_CHAT });
       },
     },
+    {
+      name:"Export Chat",
+      callback: async()=>{
+        const data = await handleFile({messages}, {currentChatUser}, {userInfo});
+        const filename = 'save.txt';
+        fileDownload(filename, data);
+        setIsContextMenuVisible(false);
+      },
+    },
   ];
 
+  // console.log(data);
 
   return (
     <div className="h-16 px-4 py-3 flex justify-between items-center bg-panel-header-background z-10">
