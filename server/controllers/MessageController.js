@@ -170,14 +170,26 @@ export const addAudioMessage = async(req,res,next)=>{
         if(req.file){
             const date = Date.now();
             let fileName ="uploads/recordings/" + date + req.file.originalname;
-            console.log(fileName,req.file.path);
-            renameSync(req.file.path,fileName);
+            // console.log(fileName,req.file.path);
+            // renameSync(req.file.path,fileName);
+            
+            
+            let localFilePath = req?.file?.path;
+            if(!localFilePath)
+              {
+                console.log("404, Image Still Not Found");
+              }
+            const fileAudio = await uploadOnCloudinary(localFilePath);
+            if(!fileAudio)
+              {
+                console.log("Cloudinary error")
+              }
             const prisma = getPrismaInstance();
             const {from,to} = req.query;
             if( from && to) {
                 const message = await prisma.messages.create({
                     data :{
-                        message: fileName,
+                        message: fileAudio.url || "",
                         sender : {connect : {id: from}},
                         reciever: {connect: {id: to}},
                         type:"audio",

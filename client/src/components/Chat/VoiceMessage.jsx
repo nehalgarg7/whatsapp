@@ -9,6 +9,17 @@ import { HOST } from "@/utils/ApiRoutes";
 
 function VoiceMessage({ message }) {
 
+  let URL = "";
+
+  if (message.message[0] === 'h' && message.message[1] === 't') 
+    {
+      URL = message.message;
+    }
+  else
+  {
+    URL = `${HOST}/${message.message}`;
+  }
+
   const [{ currentChatUser, userInfo }] = useStateProvider()
   const [audioMessage, setAudioMessage] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -41,7 +52,7 @@ function VoiceMessage({ message }) {
   }, []);
 
   useEffect(() => {
-    const audioURL = `${HOST}/${message.message}`;
+    const audioURL = `${URL}`;
     //console.log(audioURL, message.message)
     const audio = new Audio(audioURL);
     setAudioMessage(audio);
@@ -99,10 +110,13 @@ function VoiceMessage({ message }) {
     >
 
       <div>
+        
         <Avatar
-          type="lg" image={userInfo?.profileImage}
+          type="lg" image={message?.senderId === currentChatUser?.id ? currentChatUser?.profilePicture : userInfo?.profileImage}
         ></Avatar>
-      </div>
+      </div>"
+      
+      "
       <div className="cursor-pointer text-xl">
         {
           !isPlaying ? (
