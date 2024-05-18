@@ -7,8 +7,10 @@ export const initialState = {
     currentChatUser: undefined,
     messages: [],
     socket: undefined,
-    messagesSearch : false,
-    onlineUsers:[],
+    messagesSearch: false,
+    onlineUsers: [],
+    userContacts: [],
+    filteredContacts: [],
 };
 
 const reducer = (state, action) => {
@@ -57,17 +59,32 @@ const reducer = (state, action) => {
         case reducerCases.SET_MESSAGE_SEARCH:
             return {
                 ...state,
-                messagesSearch : !state.messagesSearch,
-            }   
+                messagesSearch: !state.messagesSearch,
+            }
+        case reducerCases.SET_USER_CONTACTS:
+            return {
+                ...state,
+                userContacts: action.userContacts,
+            }
+        case reducerCases.SET_CONTACT_SEARCH: {
+            const filteredContacts = state.userContacts.filter((contact) =>
+                contact.name.toLowerCase().includes(action.contactSearch.toLowerCase())
+            );
+            return {
+                ...state,
+                contactSearch: action.contactSearch,
+                filteredContacts,
+            };
+        }
         case reducerCases.SET_EXIT_CHAT:
             return {
                 ...state,
-                currentChatUser: undefined, 
+                currentChatUser: undefined,
             }
         case reducerCases.SET_ONLINE_USERS:
             return {
-               ...state,
-               onlineUsers: action.onlineUsers,
+                ...state,
+                onlineUsers: action.onlineUsers,
             }
         default:
             return state;

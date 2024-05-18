@@ -9,6 +9,27 @@ import ChatLIstItem from "./ChatLIstItem";
 function ContactsList() {
   const [allContacts, setALLContacts] = useState([]);
   const [{}, dispatch] = useStateProvider();
+  const [searchTerm, setsearchTerm] = useState("");
+  const [searchContacts, setSearchContacts] = useState([]);
+
+  useEffect(() => {
+    if (searchTerm.length) {
+      const filteredData = {};
+
+      Object.keys(allContacts).forEach((key) => {
+        filteredData[key] = allContacts[key].filter((obj) =>
+          obj.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        if (!filteredData[key].length) {
+          delete filteredData[key];
+        }
+      });
+
+      setSearchContacts(filteredData);
+    } else {
+      setSearchContacts(allContacts);
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     
@@ -22,6 +43,7 @@ function ContactsList() {
 
         //console.log(data.data.user);
         setALLContacts(data.data.user);
+        setSearchContacts(data.data.user)
       } catch (error) {
         console.log(error);
       }
@@ -55,16 +77,18 @@ function ContactsList() {
               ></BiSearchAlt2>
             </div>
             <div>
-              <input
+            <input
                 type="text"
                 placeholder="Search Contacts"
                 className="bg-transparent text-sm focus:outline-none text-white w-full"
+                onChange={(e) => setsearchTerm(e.target.value)}
+                value={searchTerm}
               />
             </div>
           </div>
         </div>
-        {Object.entries(allContacts).map(([initialLetter, userList]) => {
-          return (
+        {Object.entries(searchContacts).map(([initialLetter, userList]) => {
+          return (  userList.length >0 && (
             <div key={Date.now() + initialLetter}>
               <div className="text-teal-light pl-10 py-5">{initialLetter} </div>
 
@@ -81,7 +105,7 @@ function ContactsList() {
                   
                 );
               })}
-            </div>
+            </div> )
           );
         })}
 
