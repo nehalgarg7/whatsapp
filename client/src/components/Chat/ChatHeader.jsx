@@ -49,6 +49,8 @@ function ChatHeader() {
         const data = await handleFile({messages}, {currentChatUser}, {userInfo});
         const filename = 'save.txt';
         fileDownload(filename, data);
+        //await handleFile({messages}, {currentChatUser}, {userInfo});
+
         setIsContextMenuVisible(false);
       },
     },
