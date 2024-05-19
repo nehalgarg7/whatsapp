@@ -17,6 +17,7 @@ const CaptureAudio = dynamic(()=>import("../common/CaptureAudio"),{
 function MessageBar() {
 
   const [{userInfo, currentChatUser, socket},dispatch] = useStateProvider();
+  const [isSending, setIsSending] = useState(false);
   // console.log(currentChatUser);
   // console.log(userInfo);
   const [message, setMessage] = useState("");
@@ -101,6 +102,8 @@ function MessageBar() {
   }
 
   const sendMessage = async() => {
+    setIsSending(true);
+    //document.getElementById("send-btn").setAttribute("disabled");
     // alert("Hi")
     try {
       //console.log("Enter");
@@ -134,6 +137,7 @@ function MessageBar() {
       });
       
       setMessage("");
+      setIsSending(false)
     } catch (error) {
       console.log(error)
     }
@@ -171,11 +175,11 @@ function MessageBar() {
           />
         </div>
         <div className="flex w-10 items-center justify-center">
-          <button>
+          <button disabled = {isSending}>
             {
             message.length? (
             <MdSend className="text-panel-header-icon cursor-pointer text-xl" title="Send message"
-            onClick={sendMessage}
+            onClick={sendMessage} id="send-btn" 
             ></MdSend>
             ) : (
             <FaMicrophone
@@ -188,7 +192,7 @@ function MessageBar() {
       </>
       )}
       {grabPhoto && <PhotoPicker onChange={photoPickerChange}></PhotoPicker>}
-      {showAudioRecorder && <CaptureAudio hide={setShowAudioRecorder}></CaptureAudio>}
+      {showAudioRecorder && <CaptureAudio title = "recording" hide={setShowAudioRecorder}></CaptureAudio>}
     </div>
   );
 }

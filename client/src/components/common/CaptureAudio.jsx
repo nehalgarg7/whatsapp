@@ -19,6 +19,7 @@ function CaptureAudio({ hide }) {
   const [totalDuration, setTotalDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [renderedAudio,setRenderedAudio]=useState(null);
+  const [isSending, setIsSending] = useState(false);
 
   const audioRef = useRef(null)
   const mediaRecordedRed = useRef(null)
@@ -143,6 +144,7 @@ function CaptureAudio({ hide }) {
   const sendRecording = async () => {
     // alert("audio");
     // console.log("audio send");
+    setIsSending(true);
       try {
         const formData =new FormData();
         formData.append("audio",renderedAudio);
@@ -169,6 +171,7 @@ function CaptureAudio({ hide }) {
             fromSelf: true,
           });
           hide();
+          setIsSending(false);
         }
       } catch (error) {
         console.log(error);
@@ -232,11 +235,13 @@ function CaptureAudio({ hide }) {
           )}
         </div>
         <div>
+          <button disabled = {isSending}>
           <MdSend
             className="text-panel-header-icon cursor-pointer ar-4"
             title="Send"
             onClick={sendRecording}
           ></MdSend>
+          </button>
         </div>
       
     </div>
