@@ -4,13 +4,16 @@ import { GET_ALL_CONTACTS } from "@/utils/ApiRoutes";
 import React, { useEffect, useState } from "react";
 import { BiArrowBack, BiSearchAlt2 } from "react-icons/bi";
 import axios from "axios";
+import { RxCross2 } from "react-icons/rx";
 import ChatLIstItem from "./ChatLIstItem";
+import { useRef } from "react";
 
 function ContactsList() {
   const [allContacts, setALLContacts] = useState([]);
   const [{}, dispatch] = useStateProvider();
   const [searchTerm, setsearchTerm] = useState("");
-  const [searchContacts, setSearchContacts] = useState([]);
+  const [searchContacts, setSearchContacts] = useState({});
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (searchTerm.length) {
@@ -67,12 +70,14 @@ function ContactsList() {
               <BiSearchAlt2
                 className="
             text-panel-header-icon
-            cursor-pointer
+            cursor-text
             text-l"
+            onClick={() => inputRef.current.focus()}
               ></BiSearchAlt2>
             </div>
-            <div>
+            <div className="flex-grow">
             <input
+            ref={inputRef}
                 type="text"
                 placeholder="Search Contacts"
                 className="bg-transparent text-sm focus:outline-none text-white w-full"
@@ -80,27 +85,33 @@ function ContactsList() {
                 value={searchTerm}
               />
             </div>
+            {
+              searchTerm && (
+                <div className="hover:bg-gray-700"><RxCross2 className="text-panel-header-icon cursor-pointer text-xl" onClick={()=>setsearchTerm("")}
+        /></div>
+              )
+            }
           </div>
         </div>
-        {Object.entries(searchContacts).map(([initialLetter, userList]) => {
+        {Object.entries(searchContacts).length === 0 ? <div className="text-center text-gray-500 py-4">
+          No contacts found.
+        </div>: Object.entries(searchContacts).map(([initialLetter, userList]) => {
           return (  userList.length >0 && (
             <div key={Date.now() + initialLetter}>
               <div className="text-teal-light pl-10 py-5">{initialLetter} </div>
               {userList.map((contact) => {
-                return (
-                  
+                return (                 
                   <ChatLIstItem
                     data={contact}
                     isContactPage={true}
                     key={contact.id}
-                  ></ChatLIstItem>
-
-                  
+                  ></ChatLIstItem>   
                 );
               })}
             </div> )
           );
         })}
+        
       </div>
     </div>
   );

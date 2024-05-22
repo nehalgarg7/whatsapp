@@ -49,14 +49,11 @@ function ChatHeader() {
         const data = await handleFile({messages}, {currentChatUser}, {userInfo});
         const filename = 'save.txt';
         fileDownload(filename, data);
-        //await handleFile({messages}, {currentChatUser}, {userInfo});
-
         setIsContextMenuVisible(false);
       },
     },
   ];
 
-  // console.log(data);
 
   return (
     <div className="h-16 px-4 py-3 flex justify-between items-center bg-panel-header-background z-10">
@@ -73,8 +70,8 @@ function ChatHeader() {
         </div>
       </div>
       <div className="flex gap-6">
-        <MdCall className="text-panel-header-icon cursor-pointer text-xl"></MdCall>
-        <IoVideocam className="text-panel-header-icon cursor-pointer text-xl"></IoVideocam>
+        {/* <MdCall className="text-panel-header-icon cursor-pointer text-xl"></MdCall>
+        <IoVideocam className="text-panel-header-icon cursor-pointer text-xl"></IoVideocam> */}
         <BiSearchAlt2 className="text-panel-header-icon cursor-pointer text-xl" 
         onClick={()=>dispatch({ type: reducerCases.SET_MESSAGE_SEARCH})}></BiSearchAlt2>
         <BsThreeDotsVertical className="text-panel-header-icon cursor-pointer text-xl"

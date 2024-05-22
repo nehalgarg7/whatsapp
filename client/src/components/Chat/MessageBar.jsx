@@ -3,6 +3,7 @@ import { ADD_IMAGE_MESSAGE_ROUTE, ADD_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 import React, { useEffect, useRef, useState } from "react";
 import { BsEmojiSmile } from "react-icons/bs";
 import { FaMicrophone } from "react-icons/fa";
+import { LuLoader2 } from "react-icons/lu";
 import { ImAttachment } from "react-icons/im";
 import { MdSend } from "react-icons/md";
 import axios from "axios";
@@ -30,39 +31,48 @@ function MessageBar() {
       // alert("working");
       // console.log(e.target.files[0]);
       const file = e.target.files[0];
-      try {
-        const formData =new FormData();
-        formData.append("image",file);
-        const response = await axios.post(ADD_IMAGE_MESSAGE_ROUTE,formData,{
-          headers:{
-            "Content-Type" : "multipart/form-data",
-          },
-          params:{
-            from :userInfo.id,
-            to: currentChatUser.id,
-          }
-        });
+      console.log(e.target.files[0].type)
 
-        //console.log(response);
-        if(response.status===201){
-          socket.current.emit("send-msg", {
-            to: currentChatUser?.id,
-            from: userInfo?.id,
-            message: response.data.message,
-          });
+      if (e?.target?.files[0]?.type === "image/png" ||e?.target?.files[0]?.type === "image/jpeg" )
+        {
+          try {
+            const formData =new FormData();
+            formData.append("image",file);
+            const response = await axios.post(ADD_IMAGE_MESSAGE_ROUTE,formData,{
+              headers:{
+                "Content-Type" : "multipart/form-data",
+              },
+              params:{
+                from :userInfo.id,
+                to: currentChatUser.id,
+              }
+            });
     
-          // console.log("Hisndwnd0"); //for error
-          dispatch({
-            type: reducerCases.ADD_MESSAGE,
-            newMessage: {
-              ...response.data.message,
-            },
-            fromSelf: true,
-          });
+            //console.log(response);
+            if(response.status===201){
+              socket.current.emit("send-msg", {
+                to: currentChatUser?.id,
+                from: userInfo?.id,
+                message: response.data.message,
+              });
+        
+              // console.log("Hisndwnd0"); //for error
+              dispatch({
+                type: reducerCases.ADD_MESSAGE,
+                newMessage: {
+                  ...response.data.message,
+                },
+                fromSelf: true,
+              });
+            }
+          } catch (error) {
+            console.log("Error adding image message:",error);
+          }
         }
-      } catch (error) {
-        console.log("Error adding image message:",error);
-      }
+        else
+        {
+          alert("Upload Image File Only");
+        }
   }
 
   useEffect(() => {
@@ -172,12 +182,13 @@ function MessageBar() {
             className="bg-input-background text-sm focus:outline-none text-white h-10 rounded-lg px-5 py-4 w-full"
             onChange={(e)=>setMessage(e.target.value)}
             value = {message}
+            disabled={isSending}
           />
         </div>
         <div className="flex w-10 items-center justify-center">
           <button disabled = {isSending}>
             {
-            message.length? (
+            message.length? ( isSending === true ? <LuLoader2 className="text-panel-header-icon cursor-pointer text-xl animate-spin" /> : 
             <MdSend className="text-panel-header-icon cursor-pointer text-xl" title="Send message"
             onClick={sendMessage} id="send-btn" 
             ></MdSend>

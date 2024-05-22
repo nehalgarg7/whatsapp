@@ -4,13 +4,15 @@ import { calculateTime } from "@/utils/CalculateTime";
 import React, { useEffect, useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
+import { useRef } from "react";
+import { RxCross2 } from "react-icons/rx";
 
 function SearchMessages() {
   const [{currentChatUser, messages }, dispatch] = useStateProvider()
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedMessages,setSearchedMessages]=useState([])
 
-
+  const inputRef = useRef(null);
   
   useEffect(()=>{
     if(searchTerm){
@@ -38,12 +40,14 @@ function SearchMessages() {
                 <BiSearchAlt2
                   className="
             text-panel-header-icon
-            cursor-pointer
+            cursor-text 
             text-l"
+            onClick={() => inputRef.current.focus()}
                 ></BiSearchAlt2>
               </div>
-              <div>
+              <div className="flex-grow">
                 <input
+                ref={inputRef}
                   type="text"
                   placeholder="Search messages"
                   className="bg-transparent text-sm focus:outline-none text-white w-full"
@@ -51,6 +55,12 @@ function SearchMessages() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
+              {
+                searchTerm && (
+                  <div className="hover:bg-gray-700"><RxCross2 className="text-panel-header-icon cursor-pointer text-xl" onClick={()=> setSearchTerm("")}
+                  /></div>
+                )
+              }
             </div>
           </div>
           <span className="mt-10 text-secondary">

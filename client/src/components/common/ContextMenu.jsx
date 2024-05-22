@@ -38,8 +38,8 @@ function ContextMenu({ options, coordinates, contextMenu, setContextMenu }) {
   };
   return (
     <div
-      className={`bg-dropdown-background fixed py-2 z-[100]  shadow-xl`}
-      ref={contextMenuRef}
+    className={`bg-dropdown-background fixed py-2 z-[100] shadow-xl`}
+    ref={contextMenuRef}
       style={{
         top: coordinates.y,
         left: coordinates.x,
@@ -50,7 +50,7 @@ function ContextMenu({ options, coordinates, contextMenu, setContextMenu }) {
           <li
             key={name}
             onClick={(e) => handleClick(e, callback)}
-            className="px-5 py-2 cursor-pointer hover:bg-background-default-hover"
+            className="px-4 py-2 cursor-pointer hover:bg-background-default-hover"
           >
             <span className="text-white">{name}</span>
           </li>

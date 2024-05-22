@@ -5,6 +5,7 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { FaMicrophone, FaPauseCircle, FaPlay, FaStop, FaTrash } from "react-icons/fa";
 import { MdSend } from "react-icons/md";
+import { LuLoader2 } from "react-icons/lu";
 // import { Socket } from "socket.io-client";
 import WaveSurfer from "wavesurfer.js";
 
@@ -143,7 +144,7 @@ function CaptureAudio({ hide }) {
 
   const sendRecording = async () => {
     // alert("audio");
-    // console.log("audio send");
+    console.log("audio send");
     setIsSending(true);
       try {
         const formData =new FormData();
@@ -236,11 +237,13 @@ function CaptureAudio({ hide }) {
         </div>
         <div>
           <button disabled = {isSending}>
-          <MdSend
+          {
+            isSending === true ? <LuLoader2 className="text-panel-header-icon cursor-pointer text-xl animate-spin" /> : <MdSend
             className="text-panel-header-icon cursor-pointer ar-4"
             title="Send"
             onClick={sendRecording}
           ></MdSend>
+          }
           </button>
         </div>
       

@@ -1,7 +1,7 @@
 import { useStateProvider } from "@/context/StateContext";
 import index from "@/pages";
 import { calculateTime } from "@/utils/CalculateTime";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import MessageStatus from "../common/MessageStatus";
 import ImageMessage from "./ImageMessage";
 import dynamic from "next/dynamic";
@@ -12,10 +12,25 @@ const VoiceMessage = dynamic(()=> import("./VoiceMessage"),{
 
 function ChatContainer() {
   const [{ messages, currentChatUser, userInfo }] = useStateProvider();
+  const [loaded, setLoaded] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    setLoaded(true); // Mark messages as loaded when component mounts
+  }, []);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+  };
+
   
  // console.log(messages, currentChatUser, userInfo)
   return (
-    <div className="h-[80vh] w-full relative flex-grow overflow-auto custom-scrollbar">
+    <div className={`h-[80vh] w-full relative flex-grow overflow-auto custom-scrollbar ${loaded ? 'block' : 'hidden'} `}>
       <div className="bg-chat-background bg-fixed h-full w-full opacity-5 fixed left-0 top-0 z-0"></div>
       <div className="mx-10 my-6 relative bottom-0 z-40 left-0">
         <div className="flex w-full">
@@ -70,6 +85,7 @@ function ChatContainer() {
                 {message.type==="audio" && <VoiceMessage message={message}></VoiceMessage>}
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
         </div>
       </div>
